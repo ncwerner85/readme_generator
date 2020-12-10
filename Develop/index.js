@@ -1,42 +1,31 @@
-const inquirer = require("inquirer");
 const fs = require("fs");
-const inquirer = require("inquirer")
+const inquirer = require("inquirer");
+const path = ("path");
+const generateMarkdown = require("./utils/generateMarkdown");
 
 // array of questions for user
 
 const questions = [
-    inquirer.prompt([
-        // {
-        //     type: "confirm",
-        //     message: "Would you like to make a readme file?",
-        //     name: "makeFile",
-        // },
-        {
-            type: "checkbox",
-            message: "Please choose the options you'd like in your reade file?",
-            name: "choicesReadme",
-            choices: ["## Intstallation", "## Usage", "## Credits", "## License"]
-        }
-    ]).then(function(responce) {
-        console.log(responce);
-        const choicesReadme = JSON.stringify(responce)
-    
-        fs.writeFile("./README.md", choicesReadme, function(err) {
-            if (err) throw err;
-            console.log("Success!");
-        })
-    })
-    
-
+    {
+        type: "checkbox",
+        message: "Please choose the options you'd like in your reade file?",
+        name: "choicesReadme",
+        choices: ["## Intstallation", "## Usage", "## Credits", "## License"]
+    }
 ];
 // // function to write README file
-// function writeToFile(fileName, data) {
-// }
+function writeToFile(fileName, data) {
+    return fs.writeFileSync(path.join(process.cwd(), fileName), data);
+}
 
 // // function to initialize program
-// function init() {
-
-// }
+function init() {
+    inquirer.prompt(questions)
+    .then((inquirerResponses) => {
+        console.log("Generating README...");
+        writeToFile("README.md", generateMarkdown({...inquirerResponses}));
+    })
+}
 
 // // function call to initialize program
-// init();
+init();
